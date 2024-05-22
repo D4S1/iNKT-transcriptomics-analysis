@@ -3,7 +3,7 @@ library(dplyr)
 library(tidyr)
 
 
-setwd("/home/jd438446/iNKT_project/")
+# setwd(<project dir>)
 so_list_old_norm <- readRDS('data/so_list_afqc.rds')
 
 so_list_old_norm <- mapply(function(so, pref){
