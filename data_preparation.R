@@ -5,10 +5,11 @@ library(SingleR)
 library(presto)
 
 # OPTIONS
-method_name <- 'old_2000_norm_' # sct_norm
+
 file <- 'data/merged_old_2000_norm.rds'
+method_name <- 'old_2000_norm_' # sct_norm
 assay <-'RNA' # SCT
-regressed_file <- NULL
+regressed_file <- NULL # if path provided, script read the file instead of calculating new object
 resolution <- 0.3
 
 
