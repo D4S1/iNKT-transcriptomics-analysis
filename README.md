@@ -1,2 +1,12 @@
 # iNKT-transcriptomics-analysis
-Functional comparison of invariant natural killer T (iNKT) cell cultures through single cell transcriptomics
+
+
+## Pipeline
+
+1. `preprocessing.R`
+
+2. `normalization.R`
+
+3. `data_preparation.R`
+
+4. `generate_plots.R`
