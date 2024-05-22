@@ -4,7 +4,7 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 
-setwd("/home/jd438446/iNKT_project/")
+# setwd(<project dir>)
 so_list_sct_norm <- readRDS('data/so_list_afqc.rds')
 
 
