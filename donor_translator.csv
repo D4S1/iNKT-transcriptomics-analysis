@@ -1,0 +1,9 @@
+pool;pool_donor;donor;treatment
+pool1;donor0;donor1;IL2
+pool1;donor1;donor2;IL15
+pool2;donor0;donor1;IL15
+pool2;donor1;donor2;IL2
+pool3;donor0;donor4;IL15
+pool3;donor1;donor3;IL2
+pool4;donor0;donor3;IL15
+pool4;donor1;donor4;IL2
