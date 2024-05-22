@@ -7,10 +7,11 @@ library(SingleR)
 library(ggmosaic)
 
 # OPTIONS
-so_labels <- c('original', 'regressed_effect')
 so_list <- readRDS('data/old_2000_norm_preped.rds')
 method_name <- 'old_2000_norm_'
 dir_path <- 'graphics2/'
+
+so_labels <- c('original', 'regressed_effect')
 
 # Hot fix, needed only with my files.
 # so_list <- lapply(so_list, function(so){
