@@ -5,13 +5,16 @@ library(ggplot2)
 library(Matrix)
 library(gridExtra)
 
+# OPTIONS
+path <- NULL # to dir with data (pools directories)
+project_dir <- NULL 
+
 # options(warn=2) # changes warnings to errors and stop the script
 options(warn=1) # warn immediately
 
 # ======LOADING H5======
 
 # Paths to counts matrices in each pool
-path <- "/home/ajank/iNKT_differentiation/data/CITEseq/"
 
 setwd(path) # loading matrices
 filtered_h5 <- list.files(path, pattern="filtered.*\\.h5", recursive = TRUE)
@@ -36,7 +39,7 @@ pool_donors <- lapply(pool_donors, function(path){
   return (donors_ids)
 })
 
-setwd("/home/jd438446/iNKT_project/")
+setwd(project_dir)
 
 # ======CREATING ANNOTATION======
 
