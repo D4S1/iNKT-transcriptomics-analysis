@@ -62,7 +62,6 @@ message('Clustering finished')
 
 # NK/T annotation
 
-# tu coś nie działa
 hpca_ref_old <- HumanPrimaryCellAtlasData()
 # hpca_ref_new <- celldex::HumanPrimaryCellAtlasData()
 
