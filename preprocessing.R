@@ -6,8 +6,8 @@ library(Matrix)
 library(gridExtra)
 
 # OPTIONS
-path <- "/home/ajank/iNKT_differentiation/data/CITEseq/" # to dir with data (pools directories)
-project_dir <- "/home/jd438446/iNKT_project/"
+path <- # to dir with data (pools directories)
+project_dir <- # path to project directory
 
 # options(warn=2) # changes warnings to errors and stop the script
 options(warn=1) # warn immediately
