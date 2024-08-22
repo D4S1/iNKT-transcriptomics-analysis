@@ -5,7 +5,7 @@ library(tidyr)
 library(SeuratWrappers)
 
 
-so_list_sct_norm <- readRDS('data/so_list_afqc.rds')
+so_list_sct_norm <- readRDS(<path_to_preprocessed_data>)
 
 so_list_sct_norm <- mapply(function(so, pref){
   so <- RenameCells(so, add.cell.id=pref)
