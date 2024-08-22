@@ -1,12 +1,7 @@
 library(Seurat)
 library(Matrix)
 
-so <- readRDS('data/integrated_preped_so05.rds')
-
-# so[['RNA']] <- NULL
-# DefaultAssay(so) <- 'RNA'
-# SaveH5Seurat(so, filename = "data/integrated_so08.h5Seurat", overwrite = T)
-# Convert("data/integrated_so08.h5Seurat", dest = "h5ad")
+so <- readRDS(<path_to_prepared_seurat_object>)
 
 so$barcode <- colnames(so)
 so$UMAP_1 <- so@reductions$umap_rpca@cell.embeddings[,1]
