@@ -10,9 +10,9 @@ library(grid)
 
 # OPTIONS
 
-so <- readRDS('data/integrated_preped_so05.rds')
-method_name <- 'integrated05'
-dir_path <- 'final_graphics/'
+so <- readRDS(<path_to_prepared_seurat_object>)
+method_name <- # helper prefix
+dir_path <- # path to directory to save graphics
 file_extn <- 'pdf' # or 'png'
 
 if (!dir.exists(dir_path)){
