@@ -8,7 +8,7 @@ library(openxlsx)
 library(ramify)
 
 # OPTIONS
-so <- readRDS('data/integrated_so05.rds')
+so <- readRDS(<path_integrated_object>)
 assay <-'SCT' # SCT
 
 
