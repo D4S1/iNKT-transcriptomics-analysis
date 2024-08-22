@@ -5,8 +5,8 @@
 
 1. `preprocessing.R`
 
-2. `normalization.R`
+2. `norm_integration.R`
 
-3. `data_preparation.R`
+3. `so_preparation.R`
 
-4. `generate_plots.R`
+4. `so_plots.R`
