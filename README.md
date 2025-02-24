@@ -36,19 +36,19 @@ To gain insights into the cellular heterogeneity and dynamics of the experimenta
 R packages Seurat version 5 [Hao et al., 2024], ScType [Ianevski et al., 2022] and scVelo 0.3.2
 [Bergen et al., 2020] were employed for single-cell RNA-seq data analysis.
 
-#### `preprocessing.R`
+#### `split_preprocessing.R`
 
-Firstly, the data from pools in the form of H5 files (output from cellranger) were loaded, and annotations for each pool were created.
+Firstly, the data from pools in the form of H5 files (output from cellranger) were loaded, and annotations for each pool were created. Then pools were splited based on donor which lead to creation of 8 datasets each containing data from unique donot+treatment combination.
 
-To ensure data integrity and comparability across the experimental pools, a quality control was performed, retaining only cells that pass all filtering criteria. For filtering, the following functions were used: `quantile()` and the `subset` method on Seurat objects.
+To ensure data integrity and comparability across the experimental datasets, a quality control was performed, retaining only cells that pass all filtering criteria. For filtering, the following functions were used: `quantile()` and the `subset` method on Seurat objects.
 
 ![preprocess](graphics/preprocess.png)
 
-#### `norm_integration.R`
+#### `split_integration.R`
 
-Following this, gene expression counts within each pool were
-normalized to account for technical and biological variability using `SCTransform()`. Next, the normalized data from all pools were
-integrated into a unified Seurat object, facilitating a comprehensive transcriptomic analysis. For this `IntegrateLayers()` function was used with `RPCAIntegration` selected.
+Following this, gene expression counts within each donor +  treatment combination were
+normalized to account for technical and biological variability using `SCTransform()`. Next, the normalized data from each dataset were
+integrated using harmony methodology into a unified Seurat object, facilitating a comprehensive transcriptomic analysis. For this `IntegrateLayers()` function was used with `HarmonyIntegration` selected.
 
 ![normalization + integration](graphics/norm.png)
 
