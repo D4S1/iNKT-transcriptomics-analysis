@@ -8,13 +8,12 @@ library(openxlsx)
 library(ramify)
 
 # OPTIONS
-so <- readRDS(<path_integrated_object>)
+so <- readRDS('new_data/integrated_harmony_so05.rds')
 assay <-'SCT' # SCT
 
 
 # Original and regressed effect objects creation
 
-so <- readRDS(file)
 s_genes <- cc.genes$s.genes
 g2m_genes <- cc.genes$g2m.genes
 so <- CellCycleScoring(so, s.features = s_genes, g2m.features = g2m_genes)
@@ -48,9 +47,9 @@ scRNAseqData_scaled <- as.matrix(so[["SCT"]]@scale.data)
 es_max <- sctype_score(scRNAseqData = scRNAseqData_scaled, scaled = TRUE, gs = gs_list$gs_positive)
 
 
-cL_resutls <- do.call("rbind", lapply(unique(so@meta.data$clusters_rpca), function(cl){
-  es_max.cl = sort(rowSums(es_max[ ,rownames(so@meta.data[so@meta.data$clusters_rpca==cl, ])]), decreasing = !0)
-  head(data.frame(cluster = cl, type = names(es_max.cl), scores = es_max.cl, ncells = sum(so@meta.data$clusters_rpca==cl)), 10)
+cL_resutls <- do.call("rbind", lapply(unique(so@meta.data$clusters), function(cl){
+  es_max.cl = sort(rowSums(es_max[ ,rownames(so@meta.data[so@meta.data$clusters==cl, ])]), decreasing = !0)
+  head(data.frame(cluster = cl, type = names(es_max.cl), scores = es_max.cl, ncells = sum(so@meta.data$clusters==cl)), 10)
 }))
 sctype_scores <- cL_resutls %>% group_by(cluster) %>% top_n(n = 1, wt = scores)
 
@@ -62,7 +61,7 @@ so@meta.data$sctype_cluster_ann <- ""
 
 for(j in unique(sctype_scores$cluster)){
   cl_type <- sctype_scores[sctype_scores$cluster==j,]; 
-  so@meta.data$sctype_cluster_ann[so@meta.data$clusters_rpca == j] = as.character(cl_type$type[1])
+  so@meta.data$sctype_cluster_ann[so@meta.data$clusters == j] = as.character(cl_type$type[1])
 }
 so[['sctype_cell_ann']] <- rownames(es_max)[argmax(es_max, rows = F)]
 
@@ -70,6 +69,6 @@ so[['sctype_cell_ann']] <- rownames(es_max)[argmax(es_max, rows = F)]
 
 so <- PrepSCTFindMarkers(so)
 markers_df <-FindAllMarkers(so, only.pos = T, min.pct = 0.75)
-write.csv(markers_df, 'data/integrated_markers05_min075.csv')
+write.csv(markers_df, 'new_data/integrated_harmony_markers05_min075.csv')
 
-saveRDS(so, 'data/integrated_preped_so05.rds')
+saveRDS(so, 'new_data/integrated_harmony_preped05.rds')
