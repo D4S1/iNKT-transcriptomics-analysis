@@ -67,4 +67,3 @@ Generates number of different plots and saving them. Examples:
 
 <img src="graphics/integrated05_sctype_f_comp.png" alt="celltype1" width="600"/>
 <img src="graphics/integrated05_sctype_m_comp.png" alt="celltype2" width="600"/>
-<img src="graphics/scvelo_cluster_stream.png" alt="stream" width="600"/>
