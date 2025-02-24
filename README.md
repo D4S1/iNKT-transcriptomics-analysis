@@ -65,5 +65,6 @@ Final preparation steps involved:
 
 Generates number of different plots and saving them. Examples:
 
-<img src="graphics/integrated05_sctype_f_comp.png" alt="celltype1" width="600"/>
-<img src="graphics/integrated05_sctype_m_comp.png" alt="celltype2" width="600"/>
+<img src="graphics/composition.png" alt="celltype1" width="600"/>
+<img src="graphics/cluster_annotation.png" alt="celltype2" width="600"/>
+<img src="graphics/markers.png" alt="celltype2" width="600"/>
