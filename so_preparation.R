@@ -8,12 +8,11 @@ library(openxlsx)
 library(ramify)
 
 # OPTIONS
-so <- readRDS('new_data/integrated_harmony_so05.rds')
+so <- readRDS('path/integrated.rds')
 assay <-'SCT' # SCT
+so <- integrated
 
-
-# Original and regressed effect objects creation
-
+# Cell cycle scoring
 s_genes <- cc.genes$s.genes
 g2m_genes <- cc.genes$g2m.genes
 so <- CellCycleScoring(so, s.features = s_genes, g2m.features = g2m_genes)
@@ -21,19 +20,34 @@ so <- CellCycleScoring(so, s.features = s_genes, g2m.features = g2m_genes)
 # SingleR annotation
 hpca_ref <- celldex::HumanPrimaryCellAtlasData()
 
-singleR_main <- SingleR(test = so[[assay]]$data, # Ważne! Do annotacji singleR NIE UŻYWAĆ scalowanych wartości
-                         ref = hpca_ref,
-                         labels = hpca_ref$label.main,
-                         assay.type.test=1
-  )
-singleR_fine <- SingleR(test = so[[assay]]$data, # Ważne! Do annotacji singleR NIE UŻYWAĆ scalowanych wartości
+singleR_fine <- SingleR(test = so[['SCT']]$data, # Ważne! Do annotacji singleR NIE UŻYWAĆ scalowanych wartości
                        ref = hpca_ref,
                        labels = hpca_ref$label.fine,
                        assay.type.test=1
 )
-so[["NK_T_main"]]<- replace(singleR_main$pruned.labels, is.na(singleR_main$pruned.labels), 'unassigned')
-so[["NK_T_fine"]]<- replace(singleR_fine$pruned.labels, is.na(singleR_fine$pruned.labels), 'unassigned')
+so[["SingleR_main"]]<- replace(singleR_main$pruned.labels, is.na(singleR_main$pruned.labels), 'Unassigned')
+# so[["SingleR_fine"]]<- replace(singleR_fine$pruned.labels, is.na(singleR_fine$pruned.labels), 'Unassigned')
 message('NK/T annotation finished')
+
+cell_annotation <- data.frame(
+  row.names = colnames(so),
+  clusters = so[["clusters"]][,1],
+  celltype = so[["SingleR_fine"]][,1],
+  stringsAsFactors = F
+)
+
+cluster_annotation <- cell_annotation %>%
+  group_by(clusters, celltype) %>%
+  summarise(count = n(), .groups = "drop") %>%
+  group_by(clusters) %>%
+  slice_max(order_by = count, n = 1, with_ties = FALSE) %>%
+  ungroup()
+
+res_df <- merge(cell_annotation, cluster_annotation, by = "clusters")
+rownames(res_df) <- rownames(cell_annotation)
+
+so[['sR_cluster_annotation']] <- res_df['celltype.y']
+colnames(so@meta.data)[colnames(so@meta.data) == "cell_annotation"] <- "scT_cell_annotation"
 
 # ScType annotation
 
@@ -41,10 +55,10 @@ source("https://raw.githubusercontent.com/IanevskiAleksandr/sc-type/master/R/gen
 source("https://raw.githubusercontent.com/IanevskiAleksandr/sc-type/master/R/sctype_score_.R")
 gs_list <- gene_sets_prepare("https://raw.githubusercontent.com/IanevskiAleksandr/sc-type/master/ScTypeDB_short.xlsx", "Immune system") # e.g. Immune system, Liver, Pancreas, Kidney, Eye, Brain
 
-scRNAseqData_scaled <- as.matrix(so[["SCT"]]@scale.data)
+scRNAseqData_scaled <- GetAssayData(so, layer = "scale.data")
 
 # run ScType
-es_max <- sctype_score(scRNAseqData = scRNAseqData_scaled, scaled = TRUE, gs = gs_list$gs_positive)
+es_max <- sctype_score(scRNAseqData = scRNAseqData_scaled, scaled = T, gs = gs_list$gs_positive, gs2 = gs_list$gs_negative)
 
 
 cL_resutls <- do.call("rbind", lapply(unique(so@meta.data$clusters), function(cl){
@@ -54,16 +68,17 @@ cL_resutls <- do.call("rbind", lapply(unique(so@meta.data$clusters), function(cl
 sctype_scores <- cL_resutls %>% group_by(cluster) %>% top_n(n = 1, wt = scores)
 
 # set low-confident (low ScType score) clusters to "unknown"
-sctype_scores$type[as.numeric(as.character(sctype_scores$scores)) < sctype_scores$ncells/4] <- "Unknown"
-print(sctype_scores[,1:3])
+sctype_scores$type[as.numeric(as.character(sctype_scores$scores)) < sctype_scores$ncells/4] <- "Unassigned"
 
-so@meta.data$sctype_cluster_ann <- ""
+so@meta.data$cluster_annotation <- ""
 
 for(j in unique(sctype_scores$cluster)){
   cl_type <- sctype_scores[sctype_scores$cluster==j,]; 
-  so@meta.data$sctype_cluster_ann[so@meta.data$clusters == j] = as.character(cl_type$type[1])
+  so@meta.data$cluster_annotation[so@meta.data$clusters == j] = as.character(cl_type$type[1])
 }
-so[['sctype_cell_ann']] <- rownames(es_max)[argmax(es_max, rows = F)]
+so[['cell_annotation']] <- rownames(es_max)[argmax(es_max, rows = F)]
+
+saveRDS(so, "path/annotated.rds")
 
 # Markers
 
