@@ -5,7 +5,7 @@ library(tidyr)
 library(SeuratWrappers)
 
 
-so_list <- readRDS('neo/so_list_afqc.rds')
+so_list <- readRDS('path/so_list_afqc.rds')
 
 so_list <- mapply(function(so, pref){
   so <- RenameCells(so, add.cell.id=pref)
@@ -27,7 +27,7 @@ merged_so <- RunPCA(merged_so, npcs = 30, verbose = F)
 # The three largest globals are ‘object.list’ (2.78 GiB of class ‘list’), ‘NNHelper’
 # (93.29 KiB of class ‘function’) and ‘FUN’ (21.25 KiB of class ‘function’)
 
-saveRDS(merged_so,"neo/merged_so.rds")
+saveRDS(merged_so,"path/merged_so.rds")
 
 
 # HARMONY INTEGRATION
@@ -56,10 +56,10 @@ for (i in 2:15){
 
 # SCVI INTEGRATION - look at scvi integration python scripts
 # seurat object
-integrated <- readRDS("neo/merged_so.rds")
+integrated <- readRDS("path/merged_so.rds")
 
 # scvi
-latent <- read.csv("neo/latent_embedding_nlayers12_nlatent10.csv", row.names = 1)
+latent <- read.csv("path/latent_embedding_nlayers12_nlatent10.csv", row.names = 1)
 latent <- latent[colnames(integrated), ]
 colnames(latent) <- paste0("scvi_", seq_len(ncol(latent)))
 
@@ -71,7 +71,7 @@ scvi_reduction <- CreateDimReducObject(
 integrated[["scvi"]] <- scvi_reduction
 
 # Umap
-umap <- read.csv('neo/scvi_umap_coords(2).csv', row.names = 1)
+umap <- read.csv('path/scvi_umap_coords(2).csv', row.names = 1)
 umap_reduction <- CreateDimReducObject(
   embeddings = as.matrix(umap),
   key = "umap_",
@@ -81,7 +81,7 @@ integrated[["umap"]] <- umap_reduction
 
 
 # Clustering
-clusters <- read.csv("neo/clusters(2).csv", row.names = 1)
+clusters <- read.csv("path/clusters(2).csv", row.names = 1)
 integrated@meta.data['clusters'] <- clusters
 
 
